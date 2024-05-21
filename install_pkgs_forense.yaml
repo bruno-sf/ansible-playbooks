@@ -1,0 +1,49 @@
+---
+# Brunof -2024 - migrating from old programas.txt and .yaml
+
+- name: Install MY Forense packages
+  hosts: "{{ target_hosts }}"
+  gather_facts: false
+  become: true
+
+  vars_prompt:
+    - name: "target_hosts"
+      prompt: "Enter target hosts"
+      private: no
+
+  vars:
+    pkgs:
+      aide:
+        name: aide
+        description: Advanced Intrusion Detection Environment - dynamic binary
+      auditd:
+        name: auditd
+        description: User space tools for security auditing
+      chkrootkit:
+        name: chkrootkit
+        description: rootkit detector
+      debsecan:
+        name: debsecan
+        description: Debian Security Analyzer
+      jhead:
+        name: jhead
+        description: manipulate the non-image part of Exif compliant JPEG files
+      steghide:
+        name: steghide
+        description: steganography hiding tool
+      testdisk:
+        name: testdisk
+        description: Partition scanner and disk recovery tool, and PhotoRec file recovery
+      unhide:
+        name: unhide
+        description: Forensic tool to find hidden processes and ports
+
+  tasks:
+    - name: Show pkgs will install
+      ansible.builtin.debug:
+        msg: "{{ pkgs.keys() }}"
+
+    - name: Install Deb package
+      apt:
+        name: "{{ pkgs.keys() }}"
+        state: present
